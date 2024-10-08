@@ -5,22 +5,6 @@ export class DecryptionService {
 
   async decrypt(message: string): Promise<string> {
     try {
-      // const iv = new Uint8Array([188, 185, 57, 146, 246, 194, 114, 34, 12, 80, 198, 77])
-      // // const encryptedArrayBuffer = this.base64ToArrayBuffer(message)
-      // const encryptedArrayBuffer = this.hexToArrayBuffer(message)
-      // const decrypted = await window.crypto.subtle.decrypt(
-      //   {
-      //     // name: 'RSA-OAEP',
-      //     name: 'AES-GCM',
-      //     iv,
-      //     tagLength: 128,
-      //   },
-      //   this.privateKey,
-      //   encryptedArrayBuffer
-      // )
-
-      // return Buffer.from(decrypted).toString()
-
       const encryptedArrayBuffer = this.hexToArrayBuffer(message)
       const decrypted = await decrypt(this.privateKey, encryptedArrayBuffer)
 

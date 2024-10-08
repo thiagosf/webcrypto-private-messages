@@ -5,25 +5,6 @@ export class EncryptionService {
 
   async encrypt(message: string): Promise<string> {
     try {
-      // const iv = new Uint8Array([188, 185, 57, 146, 246, 194, 114, 34, 12, 80, 198, 77])
-
-      // const encrypted = await window.crypto.subtle.encrypt(
-      //   {
-      //     // name: 'RSA-OAEP',
-      //     name: 'AES-GCM',
-      //     iv,
-      //     tagLength: 128,
-      //   },
-      //   this.publicKey,
-      //   new TextEncoder().encode(message)
-      //   // Buffer.from(message)
-      // )
-      // console.log(encrypted);
-
-
-      // // return this.arrayBufferToBase64(encrypted)
-      // return this.arrayBufferToHex(encrypted)
-
       const encrypted = await encrypt(this.publicKey, new TextEncoder().encode(message))
 
       return this.arrayBufferToHex(encrypted)
@@ -48,6 +29,11 @@ export class EncryptionService {
   arrayBufferToHex(buffer: ArrayBuffer): string {
     const bytes = new Uint8Array(buffer)
 
-    return bytes.reduce((acc, byte) => acc + byte.toString(16).padStart(2, '0'), '')
+    return bytes
+      .reduce((acc, byte) => {
+        const part = byte.toString(16).padStart(2, '0')
+
+        return acc + part
+      }, '')
   }
 }
