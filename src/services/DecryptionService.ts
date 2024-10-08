@@ -1,6 +1,8 @@
 import { decrypt } from '@/helpers'
 
 export class DecryptionService {
+  static SECRET_MESSAGE = 'You are not allowed to read it 🔒.'
+
   constructor(private privateKey: CryptoKey) { }
 
   async decrypt(message: string): Promise<string> {
@@ -9,10 +11,8 @@ export class DecryptionService {
       const decrypted = await decrypt(this.privateKey, encryptedArrayBuffer)
 
       return Buffer.from(decrypted).toString()
-    } catch (error) {
-      console.error(error)
-
-      return 'invalid'
+    } catch {
+      return DecryptionService.SECRET_MESSAGE
     }
   }
 
