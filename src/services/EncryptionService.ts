@@ -11,7 +11,7 @@ export class EncryptionService {
     } catch (error) {
       console.error(error)
 
-      return 'invalid'
+      return 'error'
     }
   }
 
