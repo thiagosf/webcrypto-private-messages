@@ -1,0 +1,28 @@
+{
+  "exportedPublicKey": {
+    "alg": "RSA-OAEP-256",
+    "e": "AQAB",
+    "ext": true,
+    "key_ops": [
+      "encrypt"
+    ],
+    "kty": "RSA",
+    "n": "uvEFE4b3IKyrVZed3Y7QxDT0YbzYlHB9Hx30YryQM7KN5bKdYFDgeE3RaBhHJhvt2Tl9bYRnFODdRKaMhZWD_CD8fD63qnBik--l9GlUe-dexOmDmY_Fxe_cQ7ze3oA31_E-Ce2rt3ovcCoh6m8ICYNrLJg8FfRKb-ic9ZPBU8k_1CYjm6G1O7pW0T69HoPOkC9UGzHlgFgKq2vRcZxeCN2em5Ui-PpaBfMooHaQJM7QoR5KYWHQnYMX7bw4F7i8o_UZJ37Oel94UbwP2QtFP9kkwx-N07hdxYPz7xeAsPrvsfKvVTvOzk_T7ZzjyaAUDO1WXWLdjKZIGKN3l4M0SQ"
+  },
+  "exportedPrivateKey": {
+    "alg": "RSA-OAEP-256",
+    "d": "FpvLl179SFBZsFJT31XEXdZhr-hc8Sbhmv_ObJqNfhMcIimF6v4dB6-xobs975f1Hg5b4wDeTqIbYJAb8pPwkG-U2ZnkMJLC-U1EbtjGRO3ogjwTlGDU9Glb5D1VXud22YDtldnOqLP4RMJzs5yWBkCEl7IZojYXQo2JXhHukalSMFuuwe1BvgJ05GhjL_fnFkdsdSHczR4TjqUa5QEee-dF8i4rKMxoEY--S0-9Q367B81Nj1S1mrFePwD9EpFUeLjCO0qRO_5u5MdkMnOTa2nOoF_FU-QgcVCxh6KAo_S7j-mUZxRE_AKuqitDvfELwp1qWP7lBVr2mFKkqur14Q",
+    "dp": "lUWFFB4gNanfsbgh9887xnbGkQ1rJ83FjSbn-IlBFEvsyW1e5q2rE3OGpo6D1LRYKi6bD8pvSiih5ahhgV_Axb1Dx0N8_CMncCUKjrkAGGUn3VXwU5WWcqemnERemby2hsrUomz7zqR9tulowtpTjvzP6PoQ_FL3Hqgb8-dVloE",
+    "dq": "xppQ8FeJRqJNpn189L8jnLIbWgfR2EOf-JE2ItfW1N-q56gsCx51fqG7lUEiZ0wdL59kzybYaPlbIL6Hg3TOcZq5inArUtStKfv_PyDwbE8Xfw9tot6YCIoJ6j96--IXAOYS93nce4V1pJUunS8wH3cYB31tHC_3CJ19k0-_6LU",
+    "e": "AQAB",
+    "ext": true,
+    "key_ops": [
+      "decrypt"
+    ],
+    "kty": "RSA",
+    "n": "uvEFE4b3IKyrVZed3Y7QxDT0YbzYlHB9Hx30YryQM7KN5bKdYFDgeE3RaBhHJhvt2Tl9bYRnFODdRKaMhZWD_CD8fD63qnBik--l9GlUe-dexOmDmY_Fxe_cQ7ze3oA31_E-Ce2rt3ovcCoh6m8ICYNrLJg8FfRKb-ic9ZPBU8k_1CYjm6G1O7pW0T69HoPOkC9UGzHlgFgKq2vRcZxeCN2em5Ui-PpaBfMooHaQJM7QoR5KYWHQnYMX7bw4F7i8o_UZJ37Oel94UbwP2QtFP9kkwx-N07hdxYPz7xeAsPrvsfKvVTvOzk_T7ZzjyaAUDO1WXWLdjKZIGKN3l4M0SQ",
+    "p": "6NXZ8QGvAvxs9pdrVRz5srVnlBtF7gT0qR4nk4E6eiHulR53ciLQPQSkt2dmL4acKifOd41ZnkTmJ9ZRwNYYA-Mzsg4QYB9pmSFO48Ajl1TQovv9IigH2WI5vGlBHAwv_Bvac28fwQaCaL58qaVHasAKwkEVlV-nyNFeV8IOajU",
+    "q": "zYpI3f3AMRNvIZpbl0eoPeRCdiWSX0Iw6JoZn1k5RmFamMigdR4Cz1wi-QmVbgOuReIkkFZAftlTEpMUjHVsCogg2Nqd5K4LKQyx31xJnQa0uQC-HDoD92O0lOuT2UrDmls1nZ0XuUciiVLZwQwYyLSnw4MJUyY2Pxdth8kQxEU",
+    "qi": "4UaxE7Vk8CjVsmFbBPX_A7xgpFdBpPOYCCu9fwtf5eeD-BY4IwkYwrQKmKiKpL0VWizH8tEmizewkQH5OrCED-36bWpAPTQk7qQhiP283UmBlFepyGabTe55kCu4CjUUDn4s8KQBv6fVrWFYqFrafp3pAuetMof49HJL8S59Kxo"
+  }
+}
