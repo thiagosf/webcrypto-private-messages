@@ -4,9 +4,9 @@ export class Message {
   receiverUuid: string
   senderEncryptedMessage: string
   receiverEncryptedMessage: string
-  createdAt?: Date
+  createdAt?: string
 
-  constructor (props: Partial<Message>) {
+  constructor(props: Partial<Message>) {
     this.uuid = props.uuid ?? crypto.randomUUID()
     this.senderUuid = props.senderUuid!
     this.receiverUuid = props.receiverUuid!
