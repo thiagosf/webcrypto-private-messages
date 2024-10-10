@@ -8,3 +8,8 @@ Using [this repository](https://github.com/diafygi/webcrypto-examples?tab=readme
 npm install
 npm run dev
 ```
+
+## Todo
+
+- [x] Create 3 keyPairs for testing
+- [ ] Add a form to paste the `receiverUuid` and write a message
