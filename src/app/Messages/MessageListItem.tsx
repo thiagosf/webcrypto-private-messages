@@ -15,7 +15,7 @@ export function MessageListItem({ message, decryptedMessage }: Props) {
         <div>uuid: {message.uuid}</div>
         <div>from: {message.senderUuid}</div>
         <div>to: {message.receiverUuid}</div>
-        <div>{message.createdAt?.toISOString()}</div>
+        <div>{message.createdAt}</div>
       </div>
       <div className="break-words">
         <blockquote className="text-xl font-semibold text-slate-900 dark:text-white">
