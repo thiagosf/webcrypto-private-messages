@@ -1,3 +1,5 @@
+'use client'
+
 import { MessageList } from '@/app/Messages'
 
 export default function Home() {
