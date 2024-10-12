@@ -1,11 +1,9 @@
 'use client'
 
-import { useState } from 'react'
-
-import { textToEmojis } from '@/helpers'
-import { Message } from '@/models'
-
 import { QuotedMessage } from '@/app/Messages/QuotedMessage'
+import { EncryptedMessage } from '@/app/Messages/EncryptedMessage'
+
+import { Message } from '@/models'
 
 type Props = {
   message: Message,
@@ -13,8 +11,6 @@ type Props = {
 }
 
 export function MessageListItem({ message, decryptedMessage }: Props) {
-  const [encryptedMessageType] = useState<'hex' | 'emoji'>('emoji')
-
   return (
     <div className="p-4 rounded-md bg-slate-900 flex flex-col gap-4">
       <div className="flex gap-10">
@@ -26,17 +22,11 @@ export function MessageListItem({ message, decryptedMessage }: Props) {
             <div>date: {message.createdAt}</div>
             <div>encrypted message:</div>
           </div>
-          <div className="break-words">
-            <p>
-              {encryptedMessageType === 'hex' && message.senderEncryptedMessage}
-              {encryptedMessageType === 'emoji' && textToEmojis(message.senderEncryptedMessage)}
-            </p>
-          </div>
+          <EncryptedMessage message={message} />
         </div>
         <QuotedMessage text={decryptedMessage} />
       </div>
     </div>
   )
-
 }
 
