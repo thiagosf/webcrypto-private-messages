@@ -7,7 +7,7 @@ export default function Home() {
   return (
     <div className="m-10 flex gap-10">
       <div className="shrink-0 w-64">
-        <h1 className="font-semibold">web crypto api</h1>
+        <h1 className="font-extrabold">web crypto api</h1>
         <p>private messages</p>
         <hr className="border border-slate-700 my-6" />
         <div className="flex flex-col gap-4">
