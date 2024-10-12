@@ -1,7 +1,7 @@
 import { decrypt } from '@/helpers'
 
 export class DecryptionService {
-  static SECRET_MESSAGE = 'You are not allowed to read it 🔒.'
+  static SECRET_MESSAGE = 'It\'s a secret message you can not read 🤫!'
 
   constructor(private privateKey: CryptoKey) { }
 
