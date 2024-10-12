@@ -1,5 +1,6 @@
 'use client'
 
+import { Link } from '@/app/components'
 import { MessageList } from '@/app/Messages'
 
 export default function Home() {
@@ -10,7 +11,7 @@ export default function Home() {
         <p>private messages</p>
         <hr className="border border-slate-700 my-6" />
         <div className="flex flex-col gap-4">
-          <p>It&apos;s a <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Crypto_API" className="border-b-4 border-slate-700 hover:border-slate-600 hover:text-white" target="_blank">Web Crypto API</a> experiment to encrypt/decrypt messages using public and private keys.</p>
+          <p>It&apos;s a <Link href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Crypto_API" target="_blank">Web Crypto API</Link> experiment to encrypt/decrypt messages using public and private keys.</p>
           <p>Only the author and the receiver of the message can read it.</p>
         </div>
       </div>
