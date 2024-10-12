@@ -1,8 +1,11 @@
 import { ChangeEvent, useEffect, useState } from 'react'
 
-import { NewMessageDto } from '@/dtos'
 import { useKeys } from '@/app/hooks/useKeys'
+
+import { NewMessageDto } from '@/dtos'
+
 import { EncryptionService } from '@/services'
+
 import { textToEmojis } from '@/helpers'
 
 const MAX_MESSAGE_TEXT_LENGTH = 190
@@ -44,21 +47,21 @@ export function NewMessageForm({ onSubmit }: Props) {
           <h2 className="text-lg">New message</h2>
           <input
             placeholder="Receiver UUID"
-            className="bg-transparent border border-slate-500 rounded-sm px-4 py-2 outline-none text-lg"
+            className="bg-transparent border border-slate-500 rounded-sm px-4 py-2 outline-none text-lg transition-colors focus:border-highlight-500"
             value={newMessage.receiverUUID ?? ''}
             onChange={handleChange<HTMLInputElement>('receiverUUID')}
           />
           <div className="flex flex-col gap-2">
             <textarea
               placeholder="Enter your secret message here..."
-              className="bg-transparent border border-slate-500 rounded-sm px-4 py-2 outline-none text-2xl resize-none"
+              className="bg-transparent border border-slate-500 rounded-sm px-4 py-2 outline-none text-2xl transition-colors focus:border-highlight-500 resize-none"
               onChange={handleChange<HTMLTextAreaElement>('message')}
               maxLength={MAX_MESSAGE_TEXT_LENGTH}
             >{newMessage.message}</textarea>
             <p>({MAX_MESSAGE_TEXT_LENGTH - (newMessage.message || '').length} characters missing)</p>
           </div>
           <button
-            className="bg-slate-800 rounded-sm p-4 text-lg font-extrabold outline-none"
+            className="bg-slate-800 rounded-sm p-4 text-lg font-extrabold outline-none transition-colors hover:bg-highlight-500 hover:text-slate-800"
             onClick={handleSubmit}
           >Send</button>
         </div>
