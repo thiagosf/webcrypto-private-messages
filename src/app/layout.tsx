@@ -6,7 +6,7 @@ import './globals.css'
 const mainFont = Play({
   subsets: ['latin'],
   display: 'swap',
-  weight: '400'
+  weight: ['400', '700']
 })
 
 export const metadata: Metadata = {
