@@ -8,6 +8,8 @@ import { MessageListItem } from '@/app/Messages/MessageListItem'
 import { Message } from '@/models'
 
 import { DecryptionService, MessagesService } from '@/services'
+import { NewMessageForm } from '@/app/Messages/NewMessageForm'
+import { NewMessageDto } from '@/dtos'
 
 type DecryptedMessages = { [key: string]: string }
 
@@ -20,6 +22,10 @@ export function MessageList() {
     const messageService = new MessagesService()
     const messages = await messageService.load()
     setMessages(messages)
+  }
+
+  async function handleSubmit(payload: NewMessageDto) {
+    console.log('> handleSubmit', payload)
   }
 
   useEffect(() => {
@@ -58,15 +64,18 @@ export function MessageList() {
 
   return (
     <div className="flex flex-col gap-4">
-      {messages.map((message) => {
-        return (
-          <MessageListItem
-            key={message.uuid}
-            message={message}
-            decryptedMessage={decryptedMessages[message.uuid!] || '...'}
-          />
-        )
-      })}
+      <NewMessageForm onSubmit={handleSubmit} />
+      <div className="flex flex-col gap-4">
+        {messages.map((message) => {
+          return (
+            <MessageListItem
+              key={message.uuid}
+              message={message}
+              decryptedMessage={decryptedMessages[message.uuid!] || '...'}
+            />
+          )
+        })}
+      </div>
     </div>
   )
 }
