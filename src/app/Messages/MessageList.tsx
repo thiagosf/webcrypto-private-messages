@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from 'react'
 
-import { Message } from '@/models'
 import { useKeys } from '@/app/hooks/useKeys'
-import { DecryptionService, MessagesService } from '@/services'
 import { MessageListItem } from '@/app/Messages/MessageListItem'
+
+import { Message } from '@/models'
+
+import { DecryptionService, MessagesService } from '@/services'
 
 type DecryptedMessages = { [key: string]: string }
 
@@ -14,15 +16,15 @@ export function MessageList() {
   const [messages, setMessages] = useState<Array<Message>>([])
   const [decryptedMessages, setDecryptedMessages] = useState<DecryptedMessages>({})
 
-  async function loadMessages(keyPair: CryptoKeyPair) {
-    const messageService = new MessagesService(keyPair)
+  async function loadMessages() {
+    const messageService = new MessagesService()
     const messages = await messageService.load()
     setMessages(messages)
   }
 
   useEffect(() => {
-    if (keyPair) loadMessages(keyPair)
-  }, [keyPair])
+    loadMessages()
+  }, [])
 
   useEffect(() => {
     async function decryptMessages() {
@@ -32,6 +34,7 @@ export function MessageList() {
             await Promise.all(
               messages.map(async (message) => {
                 let decryptedMessage = await new DecryptionService(keyPair.privateKey).decrypt(message.senderEncryptedMessage)
+
                 if (DecryptionService.SECRET_MESSAGE === decryptedMessage) {
                   decryptedMessage = await new DecryptionService(keyPair.privateKey).decrypt(message.receiverEncryptedMessage)
                 }
