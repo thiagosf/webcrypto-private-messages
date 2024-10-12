@@ -12,7 +12,7 @@ export function Link({
   return (
     <a
       href={href}
-      className="border-b-2 text-highlight-500 border-current hover:text-highlight-300"
+      className="border-b-2 text-highlight-500 border-current transition-colors hover:text-highlight-300"
       target={target}
     >{children}</a>
   )
