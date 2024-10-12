@@ -11,7 +11,7 @@ export async function openDb(): Promise<Database> {
   })
 }
 
-export async function insertMessage(message: Message): Promise<void> {
+export async function insertMessage(message: Message): Promise<unknown> {
   const db = await openDb()
   const insertSql = `INSERT INTO messages(uuid, senderUuid, receiverUuid, senderEncryptedMessage, receiverEncryptedMessage, createdAt) VALUES(?, ?, ?, ?, ?, ?)`
   const values = [
@@ -23,12 +23,5 @@ export async function insertMessage(message: Message): Promise<void> {
     (message.createdAt || new Date().toISOString()),
   ]
 
-  return new Promise((resolve, reject) => {
-    db.run(insertSql, values, function (err: Error) {
-      console.log('> err', err)
-
-      if (err) reject(err)
-      else resolve()
-    })
-  })
+  return db.run(insertSql, values)
 }
