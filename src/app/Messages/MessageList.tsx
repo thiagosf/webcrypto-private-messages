@@ -25,7 +25,9 @@ export function MessageList() {
   }
 
   async function handleSubmit(payload: NewMessageDto) {
-    console.log('> handleSubmit', payload)
+    const messageService = new MessagesService()
+    const message = await messageService.create(payload)
+    console.log('> handleSubmit', message, payload)
   }
 
   useEffect(() => {
