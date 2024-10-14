@@ -1,72 +1,37 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
-import { useKeys } from '@/app/hooks/useKeys'
+import { useCreateMessage, useKeys, useListMessages } from '@/app/hooks'
 import { MessageListItem } from '@/app/Messages/MessageListItem'
-
-import { Message } from '@/models'
-
-import { DecryptionService, MessagesService } from '@/services'
 import { NewMessageForm } from '@/app/Messages/NewMessageForm'
 import { NewMessageDto } from '@/dtos'
 
-type DecryptedMessages = { [key: string]: string }
-
 export function MessageList() {
   const { keyPair } = useKeys()
-  const [messages, setMessages] = useState<Array<Message>>([])
-  const [decryptedMessages, setDecryptedMessages] = useState<DecryptedMessages>({})
+  const { loadingState, messages, decryptedMessages, loadMessages, decryptMessages } = useListMessages()
+  const { createMessage } = useCreateMessage()
 
-  async function loadMessages() {
-    const messageService = new MessagesService()
-    const messages = await messageService.load()
-    setMessages(messages)
-  }
-
-  async function handleSubmit(payload: NewMessageDto) {
-    const messageService = new MessagesService()
-    const message = await messageService.create(payload)
-    console.log('> handleSubmit', message, payload)
+  async function handleCreateMessage(newMessage: NewMessageDto): Promise<void> {
+    await createMessage(newMessage)
+    await loadMessages()
   }
 
   useEffect(() => {
+    if (loadingState !== 'idle') return
+
     loadMessages()
-  }, [])
+  }, [loadingState])
 
   useEffect(() => {
-    async function decryptMessages() {
-      if (messages.length > 0 && keyPair?.privateKey) {
-        setDecryptedMessages(
-          (
-            await Promise.all(
-              messages.map(async (message) => {
-                let decryptedMessage = await new DecryptionService(keyPair.privateKey).decrypt(message.senderEncryptedMessage)
-
-                if (DecryptionService.SECRET_MESSAGE === decryptedMessage) {
-                  decryptedMessage = await new DecryptionService(keyPair.privateKey).decrypt(message.receiverEncryptedMessage)
-                }
-
-                return { message, decryptedMessage }
-              })
-            )
-          ).reduce((acc, item) => {
-            if (item.message.uuid) {
-              acc[item.message.uuid] = item.decryptedMessage
-            }
-
-            return acc
-          }, {} as DecryptedMessages)
-        )
-      }
-    }
+    if (loadingState !== 'loaded' || !keyPair?.privateKey) return
 
     decryptMessages()
-  }, [messages, keyPair])
+  }, [loadingState, keyPair])
 
   return (
     <div className="flex flex-col gap-4">
-      <NewMessageForm onSubmit={handleSubmit} />
+      <NewMessageForm onSubmit={handleCreateMessage} />
       <div className="flex flex-col gap-4">
         {messages.map((message) => {
           return (
