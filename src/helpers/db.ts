@@ -11,6 +11,14 @@ export async function openDb(): Promise<Database> {
   })
 }
 
+export async function loadMessages(): Promise<Array<Message>> {
+  const db = await openDb()
+  const selectSql = `SELECT * FROM messages ORDER BY createdAt DESC`
+  const rows = await db.all(selectSql)
+
+  return rows.map((row) => new Message({ ...row }))
+}
+
 export async function insertMessage(message: Message): Promise<unknown> {
   const db = await openDb()
   const insertSql = `INSERT INTO messages(uuid, senderUuid, receiverUuid, senderEncryptedMessage, receiverEncryptedMessage, createdAt) VALUES(?, ?, ?, ?, ?, ?)`
