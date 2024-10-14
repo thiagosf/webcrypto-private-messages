@@ -21,6 +21,7 @@ export function NewMessageForm({ onSubmit }: Props) {
 
   function handleSubmit() {
     onSubmit(newMessage)
+    setNewMessage({})
   }
 
   function handleChange<T extends HTMLInputElement | HTMLTextAreaElement>(field: keyof NewMessageDto) {
@@ -57,7 +58,8 @@ export function NewMessageForm({ onSubmit }: Props) {
               className="bg-transparent border border-slate-500 rounded-sm px-4 py-2 outline-none text-2xl transition-colors focus:border-highlight-500 resize-none"
               onChange={handleChange<HTMLTextAreaElement>('message')}
               maxLength={MAX_MESSAGE_TEXT_LENGTH}
-            >{newMessage.message}</textarea>
+              value={newMessage.message || ''}
+            ></textarea>
             <p>({MAX_MESSAGE_TEXT_LENGTH - (newMessage.message || '').length} characters missing)</p>
           </div>
           <button
