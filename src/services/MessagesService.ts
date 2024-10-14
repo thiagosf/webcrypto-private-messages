@@ -1,19 +1,30 @@
 import { Message } from '@/models'
 
-import list from '@/mocks/messages/list.json'
-import { NewMessageDto } from '@/dtos'
+type ListResult = {
+  success: boolean,
+  data: Array<Message>
+}
+
+type CreateResult = {
+  success: boolean
+}
 
 export class MessagesService {
-  async load(): Promise<Array<Message>> {
-    return Promise.resolve(list.map(message => new Message({ ...message })))
+  async list(): Promise<Array<Message>> {
+    const response = await fetch('/api/messages')
+    const data = (await response.json()) as ListResult
+    if (!data.success) throw new Error('Error to list messages')
+
+    return data.data
   }
 
-  async create(payload: NewMessageDto): Promise<void> {
+  async create(payload: Message): Promise<boolean> {
     const response = await fetch('/api/messages', {
       method: 'POST',
       body: JSON.stringify(payload)
     })
-    const data = await response.json()
-    console.log(data)
+    const data = (await response.json()) as CreateResult
+
+    return data.success
   }
 }
