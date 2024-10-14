@@ -1,33 +1,29 @@
-import { randomUUID } from 'node:crypto'
 import { NextResponse } from 'next/server'
 
-import list from '@/mocks/messages/list.json'
-
-import { Message } from '@/models'
-import { insertMessage } from '@/helpers/db'
+import { MessagesController } from '@/controllers'
 
 export async function GET() {
-  const messages = list.map(message => new Message(message))
+  try {
+    const messages = await new MessagesController().listMessages()
 
-  return NextResponse.json({ messages }, { status: 200 })
+    return NextResponse.json({ success: true, data: messages }, { status: 200 })
+  } catch (error) {
+    console.log('> error to list messages', error)
+
+    return NextResponse.json({ success: false }, { status: 400 })
+  }
 }
 
 export async function POST(request: Request) {
   try {
     const payload = await request.json()
-    const message = new Message({
-      uuid: randomUUID(),
-      senderUuid: payload.senderUuid,
-      receiverUuid: payload.receiverUuid,
-      receiverEncryptedMessage: payload.receiverEncryptedMessage,
-      senderEncryptedMessage: payload.senderEncryptedMessage,
-      createdAt: new Date().toISOString(),
-    })
-    await insertMessage(message)
+    await new MessagesController().createMessage(payload)
 
     return NextResponse.json({ success: true }, { status: 201 })
   } catch (error) {
-    return NextResponse.json({ success: false, error: (error as Error).message }, { status: 400 })
+    console.log('> error to create message', error)
+
+    return NextResponse.json({ success: false }, { status: 400 })
   }
 }
 
