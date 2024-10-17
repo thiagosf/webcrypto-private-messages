@@ -30,4 +30,19 @@ db.serialize(() => {
       console.log('Created messages table.')
     }
   )
+
+  db.run(
+    `CREATE TABLE IF NOT EXISTS users (
+      uuid TEXT PRIMARY KEY,
+      publicKey TEXT UNIQUE,
+      createdAt DATETIME
+    )`,
+    (err) => {
+      if (err) {
+        return console.error(err.message)
+      }
+
+      console.log('Created users table.')
+    }
+  )
 })
