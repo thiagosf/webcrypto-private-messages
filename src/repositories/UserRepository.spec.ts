@@ -17,5 +17,11 @@ describe('UserRepository', () => {
       expect(userUuid).toBeTruthy()
       expect(user.publicKey).toEqual('public-key')
     })
+
+    it('throws an error when public key is not unique', async () => {
+      await userRepository.create('public-key')
+
+      expect(() => userRepository.create('public-key')).rejects.toThrow()
+    })
   })
 })
