@@ -14,6 +14,7 @@ export default function Home() {
         <div className="flex flex-col gap-4">
           <p>It&apos;s a <Link href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Crypto_API" target="_blank">Web Crypto API</Link> experiment to encrypt/decrypt messages using public and private keys.</p>
           <p>Only the author and the receiver of the message can read it.</p>
+          <p>Check out the <Link href="https://github.com/thiagosf/webcrypto-private-messages" target="_blank">source code</Link> on GitHub!</p>
         </div>
         <hr className="border border-slate-700 my-6" />
         <UserUuid />
