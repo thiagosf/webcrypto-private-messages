@@ -1,7 +1,8 @@
+import { User } from '@/models'
 import { UserRepository } from '@/repositories'
 
 export class UsersController {
-  async create(publicKey: string): Promise<string> {
-    return new UserRepository().create(publicKey)
+  async createOrFindOne(publicKey: string): Promise<User> {
+    return new UserRepository().createOrFindOne(publicKey)
   }
 }
