@@ -13,12 +13,12 @@ export function useCreateMessage() {
     if (!keyPair) return
 
     const publicKey = await exportKey(keyPair.publicKey)
-    const senderUuid = await createOrFindUserUuid(publicKey.n!)
+    const senderUuid = await createOrFindUserUuid(publicKey)
     const newMessage = new Message({
       senderUuid,
       receiverUuid: payload.receiverUUID,
       senderEncryptedMessage: await new EncryptionService(keyPair.publicKey).encrypt(payload.message!),
-      receiverEncryptedMessage: await new EncryptionService(keyPair.publicKey).encrypt(payload.message!),
+      receiverEncryptedMessage: await new EncryptionService(payload.receiverPublicKey!).encrypt(payload.message!),
     })
     const messageService = new MessagesService()
     await messageService.create(newMessage)
