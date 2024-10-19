@@ -2,15 +2,15 @@
 -- Up
 --------------------------------------------------------------------------------
 CREATE TABLE messages (
-  uuid TEXT PRIMARY KEY,
-  senderUuid TEXT,
-  receiverUuid TEXT,
-  senderEncryptedMessage TEXT,
-  receiverEncryptedMessage TEXT,
-  createdAt DATETIME
+  uuid UUID PRIMARY KEY,
+  sender_uuid UUID,
+  receiver_uuid UUID,
+  sender_encrypted_message TEXT,
+  receiver_encrypted_message TEXT,
+  created_at TIMESTAMP
 );
 
 --------------------------------------------------------------------------------
 -- Down
 --------------------------------------------------------------------------------
-DROP TABLE messages;
+DROP TABLE IF EXISTS messages;

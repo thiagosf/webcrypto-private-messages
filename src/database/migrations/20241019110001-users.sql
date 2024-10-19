@@ -2,12 +2,12 @@
 -- Up
 --------------------------------------------------------------------------------
 CREATE TABLE users (
-  uuid TEXT PRIMARY KEY,
-  publicKey TEXT UNIQUE,
-  createdAt DATETIME
+  uuid UUID PRIMARY KEY,
+  public_key TEXT UNIQUE,
+  created_at TIMESTAMP DEFAULT NOW()
 );
 
 --------------------------------------------------------------------------------
 -- Down
 --------------------------------------------------------------------------------
-DROP TABLE users;
+DROP TABLE IF EXISTS users;
