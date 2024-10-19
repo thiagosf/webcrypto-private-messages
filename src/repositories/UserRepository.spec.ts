@@ -21,7 +21,7 @@ describe('UserRepository', () => {
     it('throws an error when public key is not unique', async () => {
       await userRepository.create('public-key')
 
-      expect(() => userRepository.create('public-key')).rejects.toThrow()
+      await expect(() => userRepository.create('public-key')).rejects.toThrow()
     })
   })
 })
