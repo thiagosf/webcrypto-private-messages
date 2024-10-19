@@ -7,7 +7,7 @@ import { exportKey } from '@/helpers'
 export function UserUuid() {
   const { keyPair } = useKeys()
   const { createOrFindUserUuid } = useCreateUser()
-  const [uuid, setUuid] = useState('')
+  const [uuid, setUuid] = useState('Loading...')
 
   async function loadUserUuid() {
     const uuid = await createOrFindUserUuid(await exportKey(keyPair!.publicKey))
