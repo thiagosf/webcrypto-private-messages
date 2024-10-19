@@ -50,4 +50,12 @@ export class UserRepository extends BaseRepository {
       createdAt: row.created_at
     })
   }
+
+  async findPublicKeyByUuid(uuid: string): Promise<string> {
+    const user = await this.findByUuid(uuid)
+
+    if (!user) throw new Error('User not found')
+
+    return user.publicKey
+  }
 }
