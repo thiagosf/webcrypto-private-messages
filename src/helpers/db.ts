@@ -6,7 +6,9 @@ import { Message } from '@/models'
 
 export async function openDb(): Promise<Database> {
   return open({
-    filename: path.join(__dirname, '../../../../../src/database/messages.db'),
+    filename: process.env.NODE_ENV === 'test'
+      ? ':memory:'
+      : path.join(__dirname, '../../../../../src/database', 'messages.db'),
     driver: sqlite3.Database,
   })
 }
