@@ -6,7 +6,8 @@ import { NewMessageDto } from '@/dtos'
 
 import { EncryptionService } from '@/services'
 
-import { textToEmojis } from '@/helpers'
+import { importKey, textToEmojis } from '@/helpers'
+import { useFindUserPublicKey } from '@/app/hooks/users'
 
 const MAX_MESSAGE_TEXT_LENGTH = 190
 
@@ -16,10 +17,13 @@ type Props = {
 
 export function NewMessageForm({ onSubmit }: Props) {
   const { keyPair } = useKeys()
+  const { findPublicKey } = useFindUserPublicKey()
   const [encryptedMessagePreview, setEncryptedMessagePreview] = useState('')
   const [newMessageDto, setNewMessageDto] = useState<NewMessageDto>({})
 
   function handleSubmit() {
+    if (!newMessageDto.receiverPublicKey) return
+
     onSubmit(newMessageDto)
     setNewMessageDto({})
   }
@@ -37,9 +41,21 @@ export function NewMessageForm({ onSubmit }: Props) {
     setEncryptedMessagePreview(encryptedMessage)
   }
 
+  async function trySetReceiverPublicKey(uuid: string): Promise<void> {
+    const publicKey = await findPublicKey(uuid)
+    if (publicKey) {
+      const receiverPublicKey = await importKey(JSON.parse(publicKey) as JsonWebKey, ['encrypt'])
+      setNewMessageDto({ ...newMessageDto, receiverPublicKey })
+    }
+  }
+
   useEffect(() => {
     if (newMessageDto.message && keyPair) encryptMessage(newMessageDto.message, keyPair)
   }, [newMessageDto.message, keyPair])
+
+  useEffect(() => {
+    if (newMessageDto.receiverUUID) trySetReceiverPublicKey(newMessageDto.receiverUUID)
+  }, [newMessageDto.receiverUUID])
 
   return (
     <div className="flex gap-8 p-8 bg-slate-700 rounded-md">
