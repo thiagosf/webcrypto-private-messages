@@ -8,7 +8,7 @@ export async function GET() {
 
     return NextResponse.json({ success: true, data: messages }, { status: 200 })
   } catch (error) {
-    console.log('> error to list messages', error)
+    console.error('> error to list messages', error)
 
     return NextResponse.json({ success: false }, { status: 400 })
   }
@@ -21,7 +21,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ success: true }, { status: 201 })
   } catch (error) {
-    console.log('> error to create message', error)
+    console.error('> error to create message', error)
 
     return NextResponse.json({ success: false }, { status: 400 })
   }
