@@ -5,9 +5,9 @@ import { UsersController } from '@/controllers'
 export async function POST(request: Request) {
   try {
     const payload = await request.json()
-    const userUuid = await new UsersController().create(payload.publicKey)
+    const user = await new UsersController().createOrFindOne(payload.publicKey)
 
-    return NextResponse.json({ success: true, data: { userUuid } }, { status: 200 })
+    return NextResponse.json({ success: true, data: { uuid: user.uuid! } }, { status: 200 })
   } catch (error) {
     console.log('> error to create message', error)
 
