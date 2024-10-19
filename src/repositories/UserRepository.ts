@@ -5,13 +5,16 @@ import { BaseRepository } from '@/repositories/BaseRepository'
 import { User } from '@/models'
 
 export class UserRepository extends BaseRepository {
-  async create(publicKey: string): Promise<string> {
+  async createOrFindOne(publicKey: string): Promise<User> {
+    const user = await this.findByPublicKey(publicKey)
+    if (user) return user
+
     const uuid = crypto.randomUUID()
     await sql`
       INSERT INTO users (
         uuid,
-        publicKey,
-        createdAt
+        public_key,
+        created_at
       ) VALUES (
         ${uuid},
         ${publicKey},
@@ -19,7 +22,9 @@ export class UserRepository extends BaseRepository {
       )
     `
 
-    return uuid
+    const createdUser = await this.findByUuid(uuid)
+
+    return createdUser!
   }
 
   async findByUuid(uuid: string): Promise<User | undefined> {
@@ -27,10 +32,22 @@ export class UserRepository extends BaseRepository {
 
     if (!rows[0]) return undefined
 
+    return this.rowToUser(rows[0] as ConvertKeysToSnakeCase<User>)
+  }
+
+  async findByPublicKey(publicKey: string): Promise<User | undefined> {
+    const { rows } = await sql`SELECT * FROM users WHERE public_key = ${publicKey} LIMIT 1`
+
+    if (!rows[0]) return undefined
+
+    return this.rowToUser(rows[0] as ConvertKeysToSnakeCase<User>)
+  }
+
+  rowToUser(row: ConvertKeysToSnakeCase<User>): User {
     return new User({
-      uuid: rows[0].uuid,
-      publicKey: rows[0].public_key,
-      createdAt: rows[0].created_at
+      uuid: row.uuid,
+      publicKey: row.public_key,
+      createdAt: row.created_at
     })
   }
 }
