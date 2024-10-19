@@ -8,7 +8,7 @@ export async function openDb(): Promise<Database> {
   return open({
     filename: process.env.NODE_ENV === 'test'
       ? ':memory:'
-      : path.join(__dirname, '../../../../../src/database', 'messages.db'),
+      : path.join(process.cwd(), 'messages.db'),
     driver: sqlite3.Database,
   })
 }
