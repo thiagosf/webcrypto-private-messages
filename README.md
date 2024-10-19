@@ -1,6 +1,14 @@
-# private-messages
+# webcrypto-private-messages
 
-Using [this repository](https://github.com/diafygi/webcrypto-examples?tab=readme-ov-file#rsa-oaep) as reference to manage the keys.
+It's a Web Crypto API experiment to encrypt/decrypt messages using public and private keys.
+
+Only the author and the receiver of the message can read it.
+
+![Web app preview](docs/preview.png)
+
+## Sources
+
+- We have used [this repository](https://github.com/diafygi/webcrypto-examples?tab=readme-ov-file#rsa-oaep) as reference to manage the key pairs.
 
 ## Dev
 
@@ -8,8 +16,3 @@ Using [this repository](https://github.com/diafygi/webcrypto-examples?tab=readme
 npm install
 npm run dev
 ```
-
-## Todo
-
-- [x] Create 3 keyPairs for testing
-- [ ] Add a form to paste the `receiverUuid` and write a message
