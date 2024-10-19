@@ -1,9 +1,10 @@
-export class UsersController {
-  async generateAuthCode(publicKey: string): Promise<string> {
-    return `${publicKey}123`
-  }
+import { openDb } from '@/helpers/db'
+import { UserRepository } from '@/repositories'
 
-  async validateAuthCode(authCode: string, decryptedAuthCode: string): Promise<boolean> {
-    return authCode === decryptedAuthCode
+export class UsersController {
+  async create(publicKey: string): Promise<string> {
+    const db = await openDb()
+
+    return new UserRepository(db).create(publicKey)
   }
 }
