@@ -22,3 +22,12 @@ Only the author and the receiver of the message can read it.
 npm install
 npm run dev
 ```
+
+## Todo
+
+- [ ] Add messages filter by user uuid
+- [ ] Show error on input when receiver uuid is invalid
+- [ ] Add link to `from` and `to` uuids to filter messages
+- [ ] Add pagination
+- [ ] Add skeleton UI loading
+- [ ] Improve mobile UI
