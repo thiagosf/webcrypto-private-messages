@@ -10,7 +10,7 @@ Only the author and the receiver of the message can read it.
 
 1. Pair of keys are created to each visitor.
 2. Visitor fills the form with `receiver uuid` and the message.
-3. When submitting the form, one encrypted message is created using the `author uuid` and another using `receiver uuid`.
+3. When submitting the form, one encrypted message is created using the `author public key` and another using `receiver public key`.
 
 ## Sources
 
