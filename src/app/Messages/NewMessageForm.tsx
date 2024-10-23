@@ -12,10 +12,11 @@ import { useFindUserPublicKey } from '@/app/hooks/users'
 const MAX_MESSAGE_TEXT_LENGTH = 190
 
 type Props = {
+  receiverUUID?: string,
   onSubmit: (newMessageDto: NewMessageDto) => unknown
 }
 
-export function NewMessageForm({ onSubmit }: Props) {
+export function NewMessageForm({ receiverUUID, onSubmit }: Props) {
   const { keyPair } = useKeys()
   const { findPublicKey } = useFindUserPublicKey()
   const [encryptedMessagePreview, setEncryptedMessagePreview] = useState('')
@@ -25,7 +26,9 @@ export function NewMessageForm({ onSubmit }: Props) {
     if (!newMessageDto.receiverPublicKey) return
 
     onSubmit(newMessageDto)
-    setNewMessageDto({})
+    setNewMessageDto({
+      receiverUUID
+    })
   }
 
   function handleChange<T extends HTMLInputElement | HTMLTextAreaElement>(field: keyof NewMessageDto) {
@@ -52,6 +55,10 @@ export function NewMessageForm({ onSubmit }: Props) {
   useEffect(() => {
     if (newMessageDto.message && keyPair) encryptMessage(newMessageDto.message, keyPair)
   }, [newMessageDto.message, keyPair])
+
+  useEffect(() => {
+    setNewMessageDto({ ...newMessageDto, receiverUUID })
+  }, [receiverUUID])
 
   useEffect(() => {
     if (newMessageDto.receiverUUID) trySetReceiverPublicKey(newMessageDto.receiverUUID)

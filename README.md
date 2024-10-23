@@ -25,9 +25,9 @@ npm run dev
 
 ## Todo
 
-- [ ] Add messages filter by user uuid
+- [x] Add messages filter by user uuid
 - [ ] Show error on input when receiver uuid is invalid
-- [ ] Add link to `from` and `to` uuids to filter messages
+- [x] Add link to `from` and `to` uuids to filter messages
 - [ ] Add pagination
 - [ ] Add skeleton UI loading
 - [ ] Improve mobile UI

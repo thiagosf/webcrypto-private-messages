@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 import { useKeys } from '@/app/hooks/useKeys'
 import { Message } from '@/models'
@@ -9,12 +9,22 @@ type DecryptedMessages = {
   [key: string]: string
 }
 
+type Filter = 'userUuid'
+
+type Filters = {
+  userUuid: string | undefined
+}
+
 export function useListMessages() {
+  const router = useRouter()
   const searchParams = useSearchParams()
   const { keyPair } = useKeys()
   const [loadingState, setLoadingState] = useState<'idle' | 'loading' | 'loaded'>('idle')
   const [messages, setMessages] = useState<Array<Message>>([])
   const [decryptedMessages, setDecryptedMessages] = useState<DecryptedMessages>({})
+  const [filters, setFilters] = useState<Filters>({
+    userUuid: undefined
+  })
 
   async function loadMessages() {
     if (loadingState === 'loading') return
@@ -22,7 +32,7 @@ export function useListMessages() {
     setLoadingState('loading')
     const messageService = new MessagesService()
     const loadedMessages = await messageService.list({
-      userUuid: searchParams.get('user') ?? undefined
+      userUuid: filters.userUuid
     })
     setMessages(loadedMessages)
     setLoadingState('loaded')
@@ -54,11 +64,39 @@ export function useListMessages() {
     }
   }
 
+  function setFilter(filter: Filter, value: string) {
+    const params = new URLSearchParams(searchParams.toString())
+    if (filter === 'userUuid') {
+      params.set('user', value)
+      router.push(`/?${params.toString()}`)
+    }
+  }
+
+  function removeFilter(filter: Filter) {
+    const params = new URLSearchParams(searchParams.toString())
+    if (filter === 'userUuid') {
+      params.delete('user')
+      router.push(`/?${params.toString()}`)
+    }
+  }
+
+  useEffect(() => {
+    setFilters({
+      ...filters,
+      userUuid: searchParams.get('user') ?? undefined
+    })
+    setMessages([])
+    setLoadingState('idle')
+  }, [searchParams])
+
   return {
     messages,
     loadingState,
     decryptedMessages,
+    filters,
     loadMessages,
-    decryptMessages
+    decryptMessages,
+    setFilter,
+    removeFilter
   }
 }
