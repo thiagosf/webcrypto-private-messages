@@ -31,3 +31,4 @@ npm run dev
 - [ ] Add pagination
 - [ ] Add skeleton UI loading
 - [ ] Improve mobile UI
+- [ ] Use websocket to load new messages
