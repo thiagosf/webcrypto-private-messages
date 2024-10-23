@@ -1,11 +1,31 @@
-import { sql } from '@vercel/postgres'
+import { QueryResultRow, sql } from '@vercel/postgres'
 
 import { BaseRepository } from '@/repositories/BaseRepository'
 import { Message } from '@/models'
 
+export type MessageListParams = {
+  userUuid?: string
+}
+
 export class MessageRepository extends BaseRepository {
-  async list(): Promise<Array<Message>> {
-    const { rows } = await sql`SELECT * FROM messages ORDER BY created_at DESC`;
+  async list(params: MessageListParams = {}): Promise<Array<Message>> {
+    let rows: Array<QueryResultRow> = []
+
+    if (params.userUuid) {
+      const result = await sql`
+        SELECT *
+        FROM messages
+        WHERE (
+          sender_uuid = ${params.userUuid} OR
+          receiver_uuid = ${params.userUuid}
+        )
+        ORDER BY created_at DESC
+      `
+      rows = result.rows
+    } else {
+      const result = await sql`SELECT * FROM messages ORDER BY created_at DESC`
+      rows = result.rows
+    }
 
     return rows.map((row) => new Message({
       uuid: row.uuid,

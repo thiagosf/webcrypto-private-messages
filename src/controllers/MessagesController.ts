@@ -1,10 +1,10 @@
 import { Message } from '@/models'
-import { MessageRepository } from '@/repositories'
+import { MessageListParams, MessageRepository } from '@/repositories'
 
 export class MessagesController {
-  async listMessages(): Promise<Array<Message>> {
+  async listMessages(params: MessageListParams = {}): Promise<Array<Message>> {
     try {
-      return new MessageRepository().list()
+      return new MessageRepository().list(params)
     } catch (error) {
       console.error('MessagesController::listMessages[error]', error)
 

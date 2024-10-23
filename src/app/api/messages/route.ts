@@ -1,10 +1,12 @@
-import { NextResponse } from 'next/server'
+import { NextResponse, NextRequest } from 'next/server'
 
 import { MessagesController } from '@/controllers'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const messages = await new MessagesController().listMessages()
+    const messages = await new MessagesController().listMessages({
+      userUuid: request.nextUrl.searchParams.get('user_uuid') ?? undefined
+    })
 
     return NextResponse.json({ success: true, data: messages }, { status: 200 })
   } catch (error) {
@@ -14,7 +16,7 @@ export async function GET() {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const payload = await request.json()
     await new MessagesController().createMessage(payload)
