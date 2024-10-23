@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useSearchParams } from 'next/navigation'
 
 import { useKeys } from '@/app/hooks/useKeys'
 import { Message } from '@/models'
@@ -9,6 +10,7 @@ type DecryptedMessages = {
 }
 
 export function useListMessages() {
+  const searchParams = useSearchParams()
   const { keyPair } = useKeys()
   const [loadingState, setLoadingState] = useState<'idle' | 'loading' | 'loaded'>('idle')
   const [messages, setMessages] = useState<Array<Message>>([])
@@ -19,7 +21,9 @@ export function useListMessages() {
 
     setLoadingState('loading')
     const messageService = new MessagesService()
-    const loadedMessages = await messageService.list()
+    const loadedMessages = await messageService.list({
+      userUuid: searchParams.get('user') ?? undefined
+    })
     setMessages(loadedMessages)
     setLoadingState('loaded')
   }
