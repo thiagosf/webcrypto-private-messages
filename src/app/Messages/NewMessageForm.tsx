@@ -21,6 +21,7 @@ export function NewMessageForm({ receiverUUID, onSubmit }: Props) {
   const { findPublicKey } = useFindUserPublicKey()
   const [encryptedMessagePreview, setEncryptedMessagePreview] = useState('')
   const [newMessageDto, setNewMessageDto] = useState<NewMessageDto>({})
+  const [isLoadingPublicKey, setIsLoadingPublicKey] = useState(false)
 
   function handleSubmit() {
     if (!newMessageDto.receiverPublicKey) return
@@ -45,11 +46,13 @@ export function NewMessageForm({ receiverUUID, onSubmit }: Props) {
   }
 
   async function trySetReceiverPublicKey(uuid: string): Promise<void> {
+    setIsLoadingPublicKey(true)
     const publicKey = await findPublicKey(uuid)
-    if (publicKey) {
-      const receiverPublicKey = await importKey(JSON.parse(publicKey) as JsonWebKey, ['encrypt'])
-      setNewMessageDto({ ...newMessageDto, receiverPublicKey })
-    }
+    const receiverPublicKey = publicKey
+      ? await importKey(JSON.parse(publicKey) as JsonWebKey, ['encrypt'])
+      : undefined
+    setNewMessageDto({ ...newMessageDto, receiverPublicKey })
+    setIsLoadingPublicKey(false)
   }
 
   useEffect(() => {
@@ -69,12 +72,17 @@ export function NewMessageForm({ receiverUUID, onSubmit }: Props) {
       <div className="flex-1">
         <div className="flex flex-col gap-4">
           <h2 className="text-lg">New message</h2>
-          <input
-            placeholder="Receiver UUID"
-            className="bg-transparent border border-slate-500 rounded-sm px-4 py-2 outline-none text-lg transition-colors focus:border-highlight-500"
-            value={newMessageDto.receiverUUID ?? ''}
-            onChange={handleChange<HTMLInputElement>('receiverUUID')}
-          />
+          <div className="flex flex-col gap-2">
+            <input
+              placeholder="Receiver UUID"
+              className="bg-transparent border border-slate-500 rounded-sm px-4 py-2 outline-none text-lg transition-colors focus:border-highlight-500"
+              value={newMessageDto.receiverUUID ?? ''}
+              onChange={handleChange<HTMLInputElement>('receiverUUID')}
+            />
+            {newMessageDto.receiverUUID && !newMessageDto.receiverPublicKey && !isLoadingPublicKey && (
+              <div className="text-red-300">Invalid User UUID!</div>
+            )}
+          </div>
           <div className="flex flex-col gap-2">
             <textarea
               placeholder="Enter your secret message here..."
