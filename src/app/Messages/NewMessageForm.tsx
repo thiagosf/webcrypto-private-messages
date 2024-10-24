@@ -45,13 +45,15 @@ export function NewMessageForm({ receiverUUID, onSubmit }: Props) {
     setEncryptedMessagePreview(encryptedMessage)
   }
 
-  async function trySetReceiverPublicKey(uuid: string): Promise<void> {
+  async function trySetReceiverPublicKey(userUuid: string): Promise<void> {
     setIsLoadingPublicKey(true)
-    const publicKey = await findPublicKey(uuid)
+    const publicKey = userUuid
+      ? await findPublicKey(userUuid)
+      : null
     const receiverPublicKey = publicKey
       ? await importKey(JSON.parse(publicKey) as JsonWebKey, ['encrypt'])
       : undefined
-    setNewMessageDto({ ...newMessageDto, receiverPublicKey })
+    setNewMessageDto((newMessageDto) => ({ ...newMessageDto, receiverPublicKey }))
     setIsLoadingPublicKey(false)
   }
 
@@ -61,10 +63,15 @@ export function NewMessageForm({ receiverUUID, onSubmit }: Props) {
 
   useEffect(() => {
     setNewMessageDto({ ...newMessageDto, receiverUUID })
+    setIsLoadingPublicKey(true)
   }, [receiverUUID])
 
   useEffect(() => {
-    if (newMessageDto.receiverUUID) trySetReceiverPublicKey(newMessageDto.receiverUUID)
+    const interval = setTimeout(() => {
+      trySetReceiverPublicKey(newMessageDto.receiverUUID)
+    }, 400)
+
+    return () => clearTimeout(interval)
   }, [newMessageDto.receiverUUID])
 
   return (
