@@ -4,37 +4,64 @@ import { BaseRepository } from '@/repositories/BaseRepository'
 import { Message } from '@/models'
 
 export type MessageListParams = {
-  userUuid?: string
+  userUuid?: string,
+  maxCreatedAt?: Date
+}
+
+export type MessageListResult = {
+  messages: Array<Message>,
+  nextCursor: string | null
 }
 
 export class MessageRepository extends BaseRepository {
-  async list(params: MessageListParams = {}): Promise<Array<Message>> {
+  async list(params: MessageListParams = {}): Promise<MessageListResult> {
     let rows: Array<QueryResultRow> = []
+    const limit = 2
+    const maxCreatedAt = params.maxCreatedAt
+      ? params.maxCreatedAt.toISOString()
+      : new Date(new Date().getFullYear() + 1, 0, 0).toISOString()
 
     if (params.userUuid) {
       const result = await sql`
         SELECT *
         FROM messages
-        WHERE (
-          sender_uuid = ${params.userUuid} OR
-          receiver_uuid = ${params.userUuid}
-        )
+        WHERE
+          (
+            sender_uuid = ${params.userUuid} OR
+            receiver_uuid = ${params.userUuid}
+          ) AND
+          created_at <= ${maxCreatedAt}
         ORDER BY created_at DESC
+        LIMIT ${limit}
       `
       rows = result.rows
     } else {
-      const result = await sql`SELECT * FROM messages ORDER BY created_at DESC`
+      const result = await sql`
+        SELECT *
+        FROM messages
+        WHERE
+          created_at <= ${maxCreatedAt}
+        ORDER BY created_at DESC
+        LIMIT ${limit}
+      `
       rows = result.rows
     }
 
-    return rows.map((row) => new Message({
-      uuid: row.uuid,
-      senderUuid: row.sender_uuid,
-      receiverUuid: row.receiver_uuid,
-      senderEncryptedMessage: row.sender_encrypted_message,
-      receiverEncryptedMessage: row.receiver_encrypted_message,
-      createdAt: row.created_at
-    }))
+    const nextCursor = rows.length > 0
+      ? Buffer.from(rows[rows.length - 1].created_at.toISOString()).toString('base64')
+      : null
+
+    return {
+      messages: rows.map((row) => new Message({
+        uuid: row.uuid,
+        senderUuid: row.sender_uuid,
+        receiverUuid: row.receiver_uuid,
+        senderEncryptedMessage: row.sender_encrypted_message,
+        receiverEncryptedMessage: row.receiver_encrypted_message,
+        createdAt: row.created_at
+      })),
+      nextCursor
+    }
   }
 
   async create(message: Message): Promise<boolean> {
