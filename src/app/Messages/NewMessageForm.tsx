@@ -6,7 +6,7 @@ import { NewMessageDto } from '@/dtos'
 
 import { EncryptionService } from '@/services'
 
-import { importKey, textToEmojis } from '@/helpers'
+import { importKey, isValidUUID, textToEmojis } from '@/helpers'
 import { useFindUserPublicKey } from '@/app/hooks/users'
 
 const MAX_MESSAGE_TEXT_LENGTH = 190
@@ -21,6 +21,7 @@ export function NewMessageForm({ receiverUUID, onSubmit }: Props) {
   const { findPublicKey } = useFindUserPublicKey()
   const [encryptedMessagePreview, setEncryptedMessagePreview] = useState('')
   const [newMessageDto, setNewMessageDto] = useState<NewMessageDto>({})
+  const [isLoadingPublicKey, setIsLoadingPublicKey] = useState(false)
 
   function handleSubmit() {
     if (!newMessageDto.receiverPublicKey) return
@@ -44,12 +45,16 @@ export function NewMessageForm({ receiverUUID, onSubmit }: Props) {
     setEncryptedMessagePreview(encryptedMessage)
   }
 
-  async function trySetReceiverPublicKey(uuid: string): Promise<void> {
-    const publicKey = await findPublicKey(uuid)
-    if (publicKey) {
-      const receiverPublicKey = await importKey(JSON.parse(publicKey) as JsonWebKey, ['encrypt'])
-      setNewMessageDto({ ...newMessageDto, receiverPublicKey })
-    }
+  async function trySetReceiverPublicKey(userUuid: string | undefined): Promise<void> {
+    setIsLoadingPublicKey(true)
+    const publicKey = userUuid && isValidUUID(userUuid)
+      ? await findPublicKey(userUuid)
+      : null
+    const receiverPublicKey = publicKey
+      ? await importKey(JSON.parse(publicKey) as JsonWebKey, ['encrypt'])
+      : undefined
+    setNewMessageDto((newMessageDto) => ({ ...newMessageDto, receiverPublicKey }))
+    setIsLoadingPublicKey(false)
   }
 
   useEffect(() => {
@@ -58,10 +63,15 @@ export function NewMessageForm({ receiverUUID, onSubmit }: Props) {
 
   useEffect(() => {
     setNewMessageDto({ ...newMessageDto, receiverUUID })
+    setIsLoadingPublicKey(true)
   }, [receiverUUID])
 
   useEffect(() => {
-    if (newMessageDto.receiverUUID) trySetReceiverPublicKey(newMessageDto.receiverUUID)
+    const interval = setTimeout(() => {
+      trySetReceiverPublicKey(newMessageDto.receiverUUID)
+    }, 400)
+
+    return () => clearTimeout(interval)
   }, [newMessageDto.receiverUUID])
 
   return (
@@ -69,12 +79,17 @@ export function NewMessageForm({ receiverUUID, onSubmit }: Props) {
       <div className="flex-1">
         <div className="flex flex-col gap-4">
           <h2 className="text-lg">New message</h2>
-          <input
-            placeholder="Receiver UUID"
-            className="bg-transparent border border-slate-500 rounded-sm px-4 py-2 outline-none text-lg transition-colors focus:border-highlight-500"
-            value={newMessageDto.receiverUUID ?? ''}
-            onChange={handleChange<HTMLInputElement>('receiverUUID')}
-          />
+          <div className="flex flex-col gap-2">
+            <input
+              placeholder="Receiver UUID"
+              className="bg-transparent border border-slate-500 rounded-sm px-4 py-2 outline-none text-lg transition-colors focus:border-highlight-500"
+              value={newMessageDto.receiverUUID ?? ''}
+              onChange={handleChange<HTMLInputElement>('receiverUUID')}
+            />
+            {newMessageDto.receiverUUID && !newMessageDto.receiverPublicKey && !isLoadingPublicKey && (
+              <div className="text-red-300">Invalid User UUID!</div>
+            )}
+          </div>
           <div className="flex flex-col gap-2">
             <textarea
               placeholder="Enter your secret message here..."
