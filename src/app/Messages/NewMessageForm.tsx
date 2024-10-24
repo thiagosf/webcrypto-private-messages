@@ -6,7 +6,7 @@ import { NewMessageDto } from '@/dtos'
 
 import { EncryptionService } from '@/services'
 
-import { importKey, textToEmojis } from '@/helpers'
+import { importKey, isValidUUID, textToEmojis } from '@/helpers'
 import { useFindUserPublicKey } from '@/app/hooks/users'
 
 const MAX_MESSAGE_TEXT_LENGTH = 190
@@ -47,7 +47,7 @@ export function NewMessageForm({ receiverUUID, onSubmit }: Props) {
 
   async function trySetReceiverPublicKey(userUuid: string | undefined): Promise<void> {
     setIsLoadingPublicKey(true)
-    const publicKey = userUuid
+    const publicKey = userUuid && isValidUUID(userUuid)
       ? await findPublicKey(userUuid)
       : null
     const receiverPublicKey = publicKey
