@@ -45,7 +45,7 @@ export function NewMessageForm({ receiverUUID, onSubmit }: Props) {
     setEncryptedMessagePreview(encryptedMessage)
   }
 
-  async function trySetReceiverPublicKey(userUuid: string): Promise<void> {
+  async function trySetReceiverPublicKey(userUuid: string | undefined): Promise<void> {
     setIsLoadingPublicKey(true)
     const publicKey = userUuid
       ? await findPublicKey(userUuid)
