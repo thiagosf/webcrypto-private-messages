@@ -2,10 +2,12 @@ import { QueryResultRow, sql } from '@vercel/postgres'
 
 import { BaseRepository } from '@/repositories/BaseRepository'
 import { Message } from '@/models'
+import { buildCursor } from '@/helpers'
 
 export type MessageListParams = {
   userUuid?: string,
   maxCreatedAt?: Date
+  lastUuid?: string
 }
 
 export type MessageListResult = {
@@ -20,6 +22,7 @@ export class MessageRepository extends BaseRepository {
     const maxCreatedAt = params.maxCreatedAt
       ? params.maxCreatedAt.toISOString()
       : new Date(new Date().getFullYear() + 1, 0, 0).toISOString()
+    const lastUuid = params.lastUuid ?? crypto.randomUUID()
 
     if (params.userUuid) {
       const result = await sql`
@@ -30,7 +33,8 @@ export class MessageRepository extends BaseRepository {
             sender_uuid = ${params.userUuid} OR
             receiver_uuid = ${params.userUuid}
           ) AND
-          created_at <= ${maxCreatedAt}
+          created_at <= ${maxCreatedAt} AND
+          uuid <> ${lastUuid}
         ORDER BY created_at DESC
         LIMIT ${limit}
       `
@@ -40,7 +44,8 @@ export class MessageRepository extends BaseRepository {
         SELECT *
         FROM messages
         WHERE
-          created_at <= ${maxCreatedAt}
+          created_at <= ${maxCreatedAt} AND
+          uuid <> ${lastUuid}
         ORDER BY created_at DESC
         LIMIT ${limit}
       `
@@ -48,7 +53,7 @@ export class MessageRepository extends BaseRepository {
     }
 
     const nextCursor = rows.length > 0
-      ? Buffer.from(rows[rows.length - 1].created_at.toISOString()).toString('base64')
+      ? this.buildCursor(rows[rows.length - 1])
       : null
 
     return {
@@ -84,5 +89,9 @@ export class MessageRepository extends BaseRepository {
     `
 
     return true
+  }
+
+  private buildCursor(row: QueryResultRow): string {
+    return buildCursor(row.created_at, row.uuid)
   }
 }

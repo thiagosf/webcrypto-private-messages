@@ -1,16 +1,18 @@
 import { NextResponse, NextRequest } from 'next/server'
 
 import { MessagesController } from '@/controllers'
-import { paginationCursorToDate } from '@/helpers'
+import { parseCursor } from '@/helpers'
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = request.nextUrl
+    const cursor = searchParams.get('next_cursor')
+      ? parseCursor(searchParams.get('next_cursor')!)
+      : {}
     const data = await new MessagesController().listMessages({
       userUuid: searchParams.get('user_uuid') ?? undefined,
-      maxCreatedAt: searchParams.get('next_cursor')
-        ? paginationCursorToDate(searchParams.get('next_cursor')!)
-        : undefined
+      maxCreatedAt: cursor.date,
+      lastUuid: cursor.lastUuid
     })
 
     return NextResponse.json({ success: true, data }, { status: 200 })
