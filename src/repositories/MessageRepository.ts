@@ -20,8 +20,8 @@ export class MessageRepository extends BaseRepository {
     let rows: Array<QueryResultRow> = []
     const limit = 2
     const maxCreatedAt = params.maxCreatedAt
-      ? params.maxCreatedAt
-      : new Date(new Date().getFullYear() + 1, 0, 0)
+      ? params.maxCreatedAt.toUTCString()
+      : new Date(new Date().getFullYear() + 1, 0, 0).toUTCString()
     const lastUuid = params.lastUuid ?? crypto.randomUUID()
 
     if (params.userUuid) {
