@@ -26,7 +26,9 @@ export class MessageRepository extends BaseRepository {
 
     if (params.userUuid) {
       const result = await sql`
-        SELECT *
+        SELECT
+          *,
+          created_at AT TIME ZONE 'UTC'
         FROM messages
         WHERE
           (
@@ -41,7 +43,9 @@ export class MessageRepository extends BaseRepository {
       rows = result.rows
     } else {
       const result = await sql`
-        SELECT *
+        SELECT
+          *,
+          created_at AT TIME ZONE 'UTC'
         FROM messages
         WHERE
           created_at <= ${maxCreatedAt} AND
