@@ -12,6 +12,11 @@ const mainFont = Play({
 export const metadata: Metadata = {
   title: 'Web Crypto API - Private Messages',
   description: 'Send secret messages using Web Crypto API 🤫.',
+  openGraph: {
+    images: [
+      '/share.svg'
+    ]
+  }
 }
 
 export default function RootLayout({
