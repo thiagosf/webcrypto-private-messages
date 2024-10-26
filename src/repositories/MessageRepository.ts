@@ -70,6 +70,10 @@ export class MessageRepository extends BaseRepository {
   }
 
   async create(message: Message): Promise<boolean> {
+    const createdAt = message.createdAt
+      ? new Date(message.createdAt).toISOString()
+      : new Date().toISOString()
+
     await sql`
       INSERT INTO messages(
         uuid,
@@ -84,7 +88,7 @@ export class MessageRepository extends BaseRepository {
         ${message.receiverUuid},
         ${message.senderEncryptedMessage},
         ${message.receiverEncryptedMessage},
-        ${message.createdAt || new Date().toISOString()}
+        ${createdAt}
       )
     `
 
