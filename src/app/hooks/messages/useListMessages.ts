@@ -21,6 +21,7 @@ export function useListMessages() {
   const { keyPair } = useKeys()
   const [loadingState, setLoadingState] = useState<'idle' | 'loading' | 'loaded'>('idle')
   const [messages, setMessages] = useState<Array<Message>>([])
+  const [nextCursor, setNextCursor] = useState<string | null>()
   const [decryptedMessages, setDecryptedMessages] = useState<DecryptedMessages>({})
   const [filters, setFilters] = useState<Filters>({
     userUuid: undefined
@@ -31,10 +32,11 @@ export function useListMessages() {
 
     setLoadingState('loading')
     const messageService = new MessagesService()
-    const loadedMessages = await messageService.list({
+    const result = await messageService.list({
       userUuid: filters.userUuid
     })
-    setMessages(loadedMessages)
+    setMessages(result.messages)
+    setNextCursor(result.nextCursor)
     setLoadingState('loaded')
   }
 
@@ -94,6 +96,7 @@ export function useListMessages() {
     loadingState,
     decryptedMessages,
     filters,
+    nextCursor,
     loadMessages,
     decryptMessages,
     setFilter,
