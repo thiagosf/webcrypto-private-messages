@@ -1,3 +1,5 @@
+import { formatDate, parseDate } from '@/helpers/date'
+
 type PaginationCursor = {
   date?: Date,
   lastUuid?: string
@@ -7,7 +9,7 @@ export function parseCursor(cursor: string): PaginationCursor {
   try {
     const value = Buffer.from(cursor, 'base64').toString()
     const [rawDate, lastUuid] = value.split('|')
-    const date = new Date(rawDate)
+    const date = parseDate(rawDate)
     if (isNaN(Number(date))) throw new Error('Invalid Date')
 
     return { date, lastUuid }
@@ -18,7 +20,7 @@ export function parseCursor(cursor: string): PaginationCursor {
 
 export function buildCursor(createdAt: Date, uuid: string): string {
   return Buffer.from(
-    createdAt.toISOString() +
+    formatDate(createdAt) +
     '|' +
     uuid
   ).toString('base64')
