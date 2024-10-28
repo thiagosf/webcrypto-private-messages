@@ -2,7 +2,7 @@ import { QueryResultRow, sql } from '@vercel/postgres'
 
 import { BaseRepository } from '@/repositories/BaseRepository'
 import { Message } from '@/models'
-import { buildCursor } from '@/helpers'
+import { buildCursor, formatDate } from '@/helpers'
 
 export type MessageListParams = {
   userUuid?: string,
@@ -27,8 +27,7 @@ export class MessageRepository extends BaseRepository {
     if (params.userUuid) {
       const result = await sql`
         SELECT
-          *,
-          created_at AT TIME ZONE 'UTC'
+          *
         FROM messages
         WHERE
           (
@@ -44,8 +43,7 @@ export class MessageRepository extends BaseRepository {
     } else {
       const result = await sql`
         SELECT
-          *,
-          created_at AT TIME ZONE 'UTC'
+          *
         FROM messages
         WHERE
           created_at <= ${maxCreatedAt} AND
@@ -67,7 +65,7 @@ export class MessageRepository extends BaseRepository {
         receiverUuid: row.receiver_uuid,
         senderEncryptedMessage: row.sender_encrypted_message,
         receiverEncryptedMessage: row.receiver_encrypted_message,
-        createdAt: row.created_at
+        createdAt: formatDate(row.created_at)
       })),
       nextCursor
     }
