@@ -1,8 +1,12 @@
 import { Message } from '@/models'
+import { MessageListResult } from '@/repositories'
 
 type ListResult = {
   success: boolean,
-  data: Array<Message>
+  data: {
+    messages: Array<Message>,
+    nextCursor: string | null
+  }
 }
 
 type CreateResult = {
@@ -15,7 +19,7 @@ type MessageListParams = {
 }
 
 export class MessagesService {
-  async list({ userUuid, nextCursor }: MessageListParams = {}): Promise<Array<Message>> {
+  async list({ userUuid, nextCursor }: MessageListParams = {}): Promise<MessageListResult> {
     const queryParams = new URLSearchParams()
     if (userUuid) queryParams.set('user_uuid', userUuid)
     if (nextCursor) queryParams.set('next_cursor', nextCursor)
