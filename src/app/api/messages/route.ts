@@ -6,8 +6,8 @@ import { parseCursor } from '@/helpers'
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = request.nextUrl
-    const cursor = searchParams.get('next_cursor')
-      ? parseCursor(searchParams.get('next_cursor')!)
+    const cursor = searchParams.get('cursor')
+      ? parseCursor(searchParams.get('cursor')!)
       : {}
     const data = await new MessagesController().listMessages({
       userUuid: searchParams.get('user_uuid') ?? undefined,

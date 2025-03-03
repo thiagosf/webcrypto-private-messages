@@ -5,6 +5,7 @@ type ListResult = {
   success: boolean,
   data: {
     messages: Array<Message>,
+    prevCursor: string | null,
     nextCursor: string | null
   }
 }
@@ -15,14 +16,14 @@ type CreateResult = {
 
 type MessageListParams = {
   userUuid?: string,
-  nextCursor?: string
+  cursor?: string
 }
 
 export class MessagesService {
-  async list({ userUuid, nextCursor }: MessageListParams = {}): Promise<MessageListResult> {
+  async list({ userUuid, cursor }: MessageListParams = {}): Promise<MessageListResult> {
     const queryParams = new URLSearchParams()
     if (userUuid) queryParams.set('user_uuid', userUuid)
-    if (nextCursor) queryParams.set('next_cursor', nextCursor)
+    if (cursor) queryParams.set('cursor', cursor)
     const response = await fetch('/api/messages?' + queryParams)
     const data = (await response.json()) as ListResult
     if (!data.success) throw new Error('Error to list messages')

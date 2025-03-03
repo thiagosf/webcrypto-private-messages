@@ -12,7 +12,8 @@ export type MessageListParams = {
 
 export type MessageListResult = {
   messages: Array<Message>,
-  nextCursor: string | null
+  nextCursor: string | null,
+  prevCursor: string | null
 }
 
 export class MessageRepository extends BaseRepository {
@@ -23,6 +24,7 @@ export class MessageRepository extends BaseRepository {
       ? params.maxCreatedAt.toUTCString()
       : new Date(new Date().getFullYear() + 1, 0, 0).toUTCString()
     const lastUuid = params.lastUuid ?? crypto.randomUUID()
+    console.log(params)
 
     if (params.userUuid) {
       const result = await sql`
@@ -57,6 +59,9 @@ export class MessageRepository extends BaseRepository {
     const nextCursor = rows.length > 0
       ? this.buildCursor(rows[rows.length - 1])
       : null
+    const prevCursor = rows.length > 0
+      ? this.buildCursor(rows[0])
+      : null
 
     return {
       messages: rows.map((row) => new Message({
@@ -67,6 +72,7 @@ export class MessageRepository extends BaseRepository {
         receiverEncryptedMessage: row.receiver_encrypted_message,
         createdAt: formatDate(row.created_at)
       })),
+      prevCursor,
       nextCursor
     }
   }

@@ -22,6 +22,7 @@ export function useListMessages() {
   const [loadingState, setLoadingState] = useState<'idle' | 'loading' | 'loaded'>('idle')
   const [messages, setMessages] = useState<Array<Message>>([])
   const [nextCursor, setNextCursor] = useState<string | null>()
+  const [prevCursor, setPrevCursor] = useState<string | null>()
   const [decryptedMessages, setDecryptedMessages] = useState<DecryptedMessages>({})
   const [filters, setFilters] = useState<Filters>({
     userUuid: undefined
@@ -36,6 +37,7 @@ export function useListMessages() {
       userUuid: filters.userUuid
     })
     setMessages(result.messages)
+    setPrevCursor(result.prevCursor)
     setNextCursor(result.nextCursor)
     setLoadingState('loaded')
   }
@@ -96,6 +98,7 @@ export function useListMessages() {
     loadingState,
     decryptedMessages,
     filters,
+    prevCursor,
     nextCursor,
     loadMessages,
     decryptMessages,

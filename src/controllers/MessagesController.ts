@@ -10,6 +10,7 @@ export class MessagesController {
 
       return {
         messages: [],
+        prevCursor: null,
         nextCursor: null
       }
     }
